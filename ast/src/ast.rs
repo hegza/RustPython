@@ -4,6 +4,8 @@
 //! Many AST nodes have a location attribute, to determine the sourcecode
 //! location of the node.
 
+use std::fmt;
+
 pub use crate::location::Location;
 use num_bigint::BigInt;
 
@@ -552,5 +554,13 @@ impl<U> From<Option<Option<Parameter<U>>>> for Varargs<U> {
             },
             None => Varargs::None,
         }
+    }
+}
+
+/// Implement Located<T> as a transparent location. This is a workaround to significantly improve
+/// intermediate AST output with minimum effort.
+impl<T> fmt::Debug for Located<T> where T: fmt::Debug {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{:?}", self.node)
     }
 }
