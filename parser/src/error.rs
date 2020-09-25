@@ -15,7 +15,7 @@ pub struct LexicalError {
     pub location: Location,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum LexicalErrorType {
     StringError,
     UnicodeError,
@@ -77,7 +77,7 @@ pub struct FStringError {
     pub location: Location,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum FStringErrorType {
     UnclosedLbrace,
     UnopenedRbrace,
@@ -120,13 +120,13 @@ impl From<FStringError> for LalrpopError<Location, Tok, LexicalError> {
 }
 
 /// Represents an error during parsing
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct ParseError {
     pub error: ParseErrorType,
     pub location: Location,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum ParseErrorType {
     /// Parser encountered an unexpected end of input
     EOF,
