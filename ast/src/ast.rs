@@ -29,7 +29,7 @@ pub struct ImportSymbol {
     pub alias: Option<String>,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, PartialEq)]
 pub struct Located<T, U = ()> {
     pub location: Location,
     pub node: T,
@@ -182,7 +182,7 @@ pub struct WithItem<U = ()> {
 pub type Expression<U = ()> = Located<ExpressionType<U>, U>;
 
 /// A certain type of expression.
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum ExpressionType<U = ()> {
     BoolOp {
         op: BooleanOperator,
@@ -382,7 +382,7 @@ impl<U> Expression<U> {
 ///
 /// In cpython this is called arguments, but we choose parameters to
 /// distinguish between function parameters and actual call arguments.
-#[derive(Debug, PartialEq, Default)]
+#[derive(Clone, Debug, PartialEq, Default)]
 pub struct Parameters<U = ()> {
     pub posonlyargs_count: usize,
     pub args: Vec<Parameter<U>>,
@@ -394,7 +394,7 @@ pub struct Parameters<U = ()> {
 }
 
 /// A single formal parameter to a function.
-#[derive(Debug, PartialEq, Default)]
+#[derive(Clone, Debug, PartialEq, Default)]
 pub struct Parameter<U = ()> {
     pub location: Location,
     pub arg: String,
@@ -402,7 +402,7 @@ pub struct Parameter<U = ()> {
 }
 
 #[allow(clippy::large_enum_variant)]
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum ComprehensionKind<U = ()> {
     GeneratorExpression {
         element: Expression<U>,
@@ -420,7 +420,7 @@ pub enum ComprehensionKind<U = ()> {
 }
 
 /// A list/set/dict/generator compression.
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Comprehension<U = ()> {
     pub location: Location,
     pub target: Expression<U>,
@@ -435,7 +435,7 @@ pub struct ArgumentList<U = ()> {
     pub keywords: Vec<Keyword<U>>,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Keyword<U = ()> {
     pub name: Option<String>,
     pub value: Expression<U>,
@@ -450,7 +450,7 @@ pub struct ExceptHandler<U = ()> {
 }
 
 /// An operator for a binary operation (an operation with two operands).
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum Operator {
     Add,
     Sub,
@@ -468,14 +468,14 @@ pub enum Operator {
 }
 
 /// A boolean operation.
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum BooleanOperator {
     And,
     Or,
 }
 
 /// An unary operator. This is an operation with only a single operand.
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum UnaryOperator {
     Pos,
     Neg,
@@ -484,7 +484,7 @@ pub enum UnaryOperator {
 }
 
 /// A comparison operation.
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum Comparison {
     Equal,
     NotEqual,
@@ -499,7 +499,7 @@ pub enum Comparison {
 }
 
 /// A numeric literal.
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum Number {
     Integer { value: BigInt },
     Float { value: f64 },
@@ -517,7 +517,7 @@ pub enum ConversionFlag {
     Repr,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum StringGroup<U = ()> {
     Constant {
         value: String,
@@ -532,7 +532,7 @@ pub enum StringGroup<U = ()> {
     },
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum Varargs<U = ()> {
     None,
     Unnamed,
@@ -559,7 +559,7 @@ impl<U> From<Option<Option<Parameter<U>>>> for Varargs<U> {
 
 /// Implement Located<T> as a transparent location. This is a workaround to significantly improve
 /// intermediate AST output with minimum effort.
-impl<T> fmt::Debug for Located<T> where T: fmt::Debug {
+impl<T, U> fmt::Debug for Located<T, U> where T: fmt::Debug {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{:?}", self.node)
     }
